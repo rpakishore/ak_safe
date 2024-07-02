@@ -65,6 +65,9 @@ class SAFEWrapper:
     @property
     def version(self) -> str:
         return self.SapModel.GetVersion()[0]
+    
+    def close(self, save: bool=True):
+        self.SafeObject.ApplicationExit(save)
         
 def get_SafeObject(attach_to_instance: bool, program_path: str|Path|None = None, 
                     known_filepaths: list[str] = __known_filepaths):
