@@ -1,32 +1,21 @@
-import os
 import sys
 from pathlib import Path
-import clr
-
-clr.AddReference("System.Runtime.InteropServices")
-from System.Runtime.InteropServices import Marshal
-
-if Path(R'C:\Program Files\Computers and Structures\SAFE 21').is_dir():
-    clr.AddReference(R'C:\Program Files\Computers and Structures\SAFE 21\SAFEv1.dll')
-elif Path(R'C:\Program Files\Computers and Structures\SAFE 20').is_dir():
-    clr.AddReference(R'C:\Program Files\Computers and Structures\SAFE 20\SAFEv1.dll')
-else:
-    raise Exception('SAFE Folder not found')
-from SAFEv1 import cOAPI, cHelper, Helper
+import comtypes.client
 
 from ak_safe.utils.logger import log
 
+__known_filepaths: list[str] = [
+    r"C:\Program Files\Computers and Structures\SAFE 21\SAFE.exe"
+]
+
 class SAFEWrapper:
-    def __init__(self, program_path: str|Path|None = None) -> None:
+    def __init__(self, attach_to_instance: bool, program_path: str|Path|None = None) -> None:
         self.program_path: str|None=  str(Path(str(program_path)).absolute()) if program_path else None
-        self.mySAFEObject = attach_to_model()
-        self.SapModel = self.mySAFEObject.SapModel
-    
+        self.SafeObject = get_SafeObject(attach_to_instance=attach_to_instance, program_path=program_path)
+        self.SapModel = self.SafeObject.SapModel
+
     def __str__(self) -> str:
-        return 'Instance of SAFEWrapper.".'
-    
-    def __repr__(self) -> str:
-        return 'SAFEWrapper()'
+        return 'Instance of SAFEWrapper.'
     
     def __del__(self) -> None:
         try:
@@ -53,38 +42,76 @@ class SAFEWrapper:
     @property
     def api_version(self) -> str:
         """Retrieves the API version implemented by SAP2000."""
-        return self.mySAFEObject.GetOAPIVersionNumber()
+        return self.SafeObject.GetOAPIVersionNumber()
     
-    def hide(self) -> bool:
-        """Hides the Sap2000 application. 
+    def hide(self, status: bool=False) -> bool:
+        """Hides the SAFE application. 
         When hidden it is not visible on the screen or on the Windows task bar.
         """
         try:
-            self.mySAFEObject.Hide() 
+            if status:
+                self.SafeObject.Hide() 
+            else:
+                self.SafeObject.Unhide()
             return True
         except Exception as e:
             log.critical(str(e))
             return False
-    
-    def unhide(self) -> bool:
-        """Unhides the Sap2000 application. 
-        When hidden it is not visible on the screen or on the Windows task bar.
-        """
-        try:
-            self.mySAFEObject.Unhide()
-            return True
-        except Exception as e:
-            log.critical(str(e))
-            return False
-    
+        
     @property
     def ishidden(self) -> bool:
-        return self.mySAFEObject.Visible()
+        return self.SafeObject.Visible()
     
     @property
     def version(self) -> str:
         return self.SapModel.GetVersion()[0]
+    
+    def close(self, save: bool=True):
+        self.SafeObject.ApplicationExit(save)
         
-def attach_to_model():
-    helper = cHelper(Helper())
-    return cOAPI(helper.GetObject("CSI.SAFE.API.ETABSObject"))
+def get_SafeObject(attach_to_instance: bool, program_path: str|Path|None = None, 
+                    known_filepaths: list[str] = __known_filepaths):
+    #create API helper object
+    helper = (
+        comtypes.client
+        .CreateObject('SAFEv1.Helper')
+        .QueryInterface(comtypes.gen.SAFEv1.cHelper)
+        )
+    
+    if attach_to_instance:
+        #attach to a running instance of SAFE
+        try:
+            #get the active SapObject
+            SafeObject = helper.GetObject("CSI.SAFE.API.ETABSObject") 
+            log.debug('Attached to existing Instance.')
+            return SafeObject
+        except (OSError, comtypes.COMError):
+            log.error("No running instance of the program found or failed to attach.")
+            sys.exit(-1)
+        except Exception as e:
+            log.error(str(e))
+            sys.exit(-1)
+            
+    else:
+        if program_path is None:
+            for filepath in known_filepaths:
+                if Path(filepath).is_file():
+                    program_path = filepath
+                    break
+        
+        assert program_path is not None, 'SAFE.exe file not found. Please pass the program_path to initialize instance'
+    
+        try:
+            SafeObject = helper.CreateObject(program_path)
+            SafeObject.ApplicationStart()
+            SafeObject.SapModel.InitializeNewModel(6)   #initialize model
+            log.debug(f'Created model from {program_path}.')
+            return SafeObject
+        except (OSError, comtypes.COMError):
+            log.error("Cannot start a new instance of the program.")
+            sys.exit(-1)
+        except Exception as e:
+            log.error(str(e))
+            sys.exit(-1)
+
+
