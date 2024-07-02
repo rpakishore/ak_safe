@@ -1,5 +1,7 @@
 from typing import Literal
 
+from ak_safe.utils.logger import log
+
 __eForce: dict = {
     0:'NotApplicable',
     1:'lb',
@@ -11,8 +13,8 @@ __eForce: dict = {
 }
 
 class __EForce:
-    def __init__(self, __Force: dict) -> None:
-        self.__Force = __Force
+    def __init__(self, data: dict) -> None:
+        self.__Force = data
         
     def __str__(self) -> str:
         "eForce Enumeration. See oAPI documentation"
@@ -28,7 +30,7 @@ class __EForce:
                 return self.__Force[int(value)]
         
         except Exception as e:
-            AssertionError(f'Error occured when calling `__EForce Call`:{str(e)}\n'
+            log.warning(f'Error occured when calling `__EForce Call`:{str(e)}\n'
                             f'Unexpected value value={value}. Expected {self.__Force.keys()} or {self.__Force.values()}')
     
     @property
@@ -39,4 +41,4 @@ class __EForce:
     def list(self) -> dict[str]:
         return self.__Force
     
-eForce = __EForce(__Force = __eForce)
+eForce = __EForce(data = __eForce)

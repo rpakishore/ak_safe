@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from typing import Literal
+
+from ak_safe.utils.logger import log
 
 __eUnit: dict = {
     1 : 'lb_in_F',
@@ -21,8 +22,8 @@ __eUnit: dict = {
 }
 
 class __EUnits:
-    def __init__(self, __units: dict) -> None:
-        self.__units = __units
+    def __init__(self, data: dict) -> None:
+        self.__units = data
         
     def __str__(self) -> str:
         "eUnits Enumeration. See oAPI documentation"
@@ -70,11 +71,11 @@ class __EUnits:
                 return self.__units[int(value)]
         
         except Exception as e:
-            AssertionError(f'Error occured when calling `__EUnits Call`:{str(e)}\n'
+            log.warning(f'Error occured when calling `__EUnits Call`:{str(e)}\n'
                             f'Unexpected value value={value}. Expected {self.__units.keys()} or {self.__units.values()}')
     
     @property
     def __reverse(self) -> dict:
         return {y:x for x, y in self.__units.items()}
     
-eUnits = __EUnits(__units = __eUnit)
+eUnits = __EUnits(data = __eUnit)

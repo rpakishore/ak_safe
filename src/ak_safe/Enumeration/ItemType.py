@@ -1,5 +1,7 @@
 from typing import Literal
 
+from ak_safe.utils.logger import log
+
 __eItemType: dict = {
     0:'Objects',
     1:'Group',
@@ -7,8 +9,8 @@ __eItemType: dict = {
 }
 
 class __EItemType:
-    def __init__(self, __ItemType: dict) -> None:
-        self.__ItemType = __ItemType
+    def __init__(self, data: dict) -> None:
+        self.__ItemType = data
         
     def __str__(self) -> str:
         "eItemType Enumeration. See oAPI documentation"
@@ -24,7 +26,7 @@ class __EItemType:
                 return self.__ItemType[int(value)]
         
         except Exception as e:
-            AssertionError(f'Error occured when calling `__EItemType Call`:{str(e)}\n'
+            log.warning(f'Error occured when calling `__EItemType Call`:{str(e)}\n'
                             f'Unexpected value value={value}. Expected {self.__ItemType.keys()} or {self.__ItemType.values()}')
     
     @property
@@ -35,4 +37,4 @@ class __EItemType:
     def list(self) -> dict[str]:
         return self.__ItemType
     
-eItemType = __EItemType(__ItemType = __eItemType)
+eItemType = __EItemType(data = __eItemType)

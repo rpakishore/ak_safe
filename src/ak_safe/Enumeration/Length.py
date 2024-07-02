@@ -1,5 +1,7 @@
 from typing import Literal
 
+from ak_safe.utils.logger import log
+
 __eLength: dict = {
     0:'NotApplicable',
     1:'inch',
@@ -12,8 +14,8 @@ __eLength: dict = {
 
 
 class __ELength:
-    def __init__(self, __Length: dict) -> None:
-        self.__Length = __Length
+    def __init__(self, data: dict) -> None:
+        self.__Length = data
         
     def __str__(self) -> str:
         "eLength Enumeration. See oAPI documentation"
@@ -29,7 +31,7 @@ class __ELength:
                 return self.__Length[int(value)]
         
         except Exception as e:
-            AssertionError(f'Error occured when calling `__ELength Call`:{str(e)}\n'
+            log.warning(f'Error occured when calling `__ELength Call`:{str(e)}\n'
                             f'Unexpected value value={value}. Expected {self.__Length.keys()} or {self.__Length.values()}')
     
     @property
@@ -40,4 +42,4 @@ class __ELength:
     def list(self) -> dict[str]:
         return self.__Length
     
-eLength = __ELength(__Length = __eLength)
+eLength = __ELength(data = __eLength)

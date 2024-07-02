@@ -1,5 +1,7 @@
 from typing import Literal
 
+from ak_safe.utils.logger import log
+
 __eTemperature: dict = {
     0:'NotApplicable',
     1:'F',
@@ -7,8 +9,8 @@ __eTemperature: dict = {
 }
 
 class __ETemperature:
-    def __init__(self, __temperature: dict) -> None:
-        self.__temperature = __temperature
+    def __init__(self, data: dict) -> None:
+        self.__temperature = data
         
     def __str__(self) -> str:
         "eTemperature Enumeration. See oAPI documentation"
@@ -24,7 +26,7 @@ class __ETemperature:
                 return self.__temperature[int(value)]
         
         except Exception as e:
-            AssertionError(f'Error occured when calling `__ETemperature Call`:{str(e)}\n'
+            log.warning(f'Error occured when calling `__ETemperature Call`:{str(e)}\n'
                             f'Unexpected value value={value}. Expected {self.__temperature.keys()} or {self.__temperature.values()}')
     
     @property
@@ -35,4 +37,4 @@ class __ETemperature:
     def list(self) -> dict[str]:
         return self.__temperature
     
-eTemperature = __ETemperature(__temperature = __eTemperature)
+eTemperature = __ETemperature(data = __eTemperature)
