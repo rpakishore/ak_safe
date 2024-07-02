@@ -2,7 +2,7 @@ from typing import Literal
 
 from ak_safe.utils.logger import log
 
-__eUnit: dict = {
+eUnit_dict: dict = {
     1 : 'lb_in_F',
     2 : 'lb_ft_F',
     3 : 'kip_in_F',
@@ -78,4 +78,4 @@ class __EUnits:
     def __reverse(self) -> dict:
         return {y:x for x, y in self.__units.items()}
     
-eUnits = __EUnits(data = __eUnit)
+eUnits = __EUnits(data = eUnit_dict)

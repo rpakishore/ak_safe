@@ -2,7 +2,7 @@ from typing import Literal
 
 from ak_safe.utils.logger import log
 
-__eItemType: dict = {
+eItemType_dict: dict = {
     0:'Objects',
     1:'Group',
     2:'SelectedObjects',
@@ -37,4 +37,4 @@ class __EItemType:
     def list(self) -> dict[str]:
         return self.__ItemType
     
-eItemType = __EItemType(data = __eItemType)
+eItemType = __EItemType(data = eItemType_dict)

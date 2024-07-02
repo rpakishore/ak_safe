@@ -2,7 +2,7 @@ from typing import Literal
 
 from ak_safe.utils.logger import log
 
-__eForce: dict = {
+eForce_dict: dict = {
     0:'NotApplicable',
     1:'lb',
     2:'kip',
@@ -41,4 +41,4 @@ class __EForce:
     def list(self) -> dict[str]:
         return self.__Force
     
-eForce = __EForce(data = __eForce)
+eForce = __EForce(data = eForce_dict)

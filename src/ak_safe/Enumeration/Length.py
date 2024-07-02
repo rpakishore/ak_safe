@@ -2,7 +2,7 @@ from typing import Literal
 
 from ak_safe.utils.logger import log
 
-__eLength: dict = {
+eLength_dict: dict = {
     0:'NotApplicable',
     1:'inch',
     2:'ft',
@@ -13,7 +13,7 @@ __eLength: dict = {
 }
 
 
-class __ELength:
+class ELength:
     def __init__(self, data: dict) -> None:
         self.__Length = data
         
@@ -42,4 +42,4 @@ class __ELength:
     def list(self) -> dict[str]:
         return self.__Length
     
-eLength = __ELength(data = __eLength)
+eLength = ELength(data = eLength_dict)

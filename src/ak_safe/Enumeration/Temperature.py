@@ -2,7 +2,7 @@ from typing import Literal
 
 from ak_safe.utils.logger import log
 
-__eTemperature: dict = {
+eTemperature_dict: dict = {
     0:'NotApplicable',
     1:'F',
     2:'C'
@@ -37,4 +37,4 @@ class __ETemperature:
     def list(self) -> dict[str]:
         return self.__temperature
     
-eTemperature = __ETemperature(data = __eTemperature)
+eTemperature = __ETemperature(data = eTemperature_dict)
