@@ -81,7 +81,7 @@ def get_SafeObject(attach_to_instance: bool, program_path: str|Path|None = None,
     helper = (
         comtypes.client
         .CreateObject('SAFEv1.Helper')
-        .QueryInterface(comtypes.gen.SAFEv1.cHelper)
+        .QueryInterface(comtypes.gen.SAFEv1.cHelper) # type: ignore
         )
     
     if attach_to_instance:
