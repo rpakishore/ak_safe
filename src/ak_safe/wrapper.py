@@ -4,6 +4,9 @@ import comtypes.client
 
 from ak_safe.utils.logger import log
 
+from .Model.model import Model
+from .Database import Database
+
 __known_filepaths: list[str] = [
     r"C:\Program Files\Computers and Structures\SAFE 21\SAFE.exe"
 ]
@@ -13,6 +16,9 @@ class SAFEWrapper:
         self.program_path: str|None=  str(Path(str(program_path)).absolute()) if program_path else None
         self.SafeObject = get_SafeObject(attach_to_instance=attach_to_instance, program_path=program_path)
         self.SapModel = self.SafeObject.SapModel
+        
+        self.Model = Model(SafeObject=self.SafeObject)
+        self.Database = Database(SafeObject=self.SafeObject)
 
     def __str__(self) -> str:
         return 'Instance of SAFEWrapper.'
