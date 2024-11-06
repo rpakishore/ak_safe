@@ -13,7 +13,8 @@ dynamic = ["version", "description"]
 dependencies = [
     "comtypes==1.2.0",
     "forallpeople==2.6.7",
-    "pandas==2.1.3"
+    "pandas==2.1.3",
+    "openpyxl"
 ]
 
 [project.optional-dependencies]
@@ -22,11 +23,8 @@ dev = [
     "ipykernel",
     "ipywidgets",
     "pandasgui",
-    "line-profiler"
-]
-
-test = [
-    "pytest==7.4.3"
+    "line-profiler",
+    "pytest==7.4.3",
 ]
 
 [project.urls]

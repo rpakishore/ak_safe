@@ -36,7 +36,6 @@
 - [4. Roadmap](#4-roadmap)
 - [5. License](#5-license)
 - [6. Contact](#6-contact)
-- [7. Acknowledgements](#7-acknowledgements)
 
 <!-- About the Project -->
 ## 1. About the Project
@@ -124,6 +123,3 @@ See [LICENSE](https://github.com/rpakishore/ak_safe/blob/main/LICENSE) for more 
 Arun Kishore - [@rpakishore](mailto:pypi@rpakishore.co.in)
 
 Project Link: [https://github.com/rpakishore/ak_safe](https://github.com/rpakishore/ak_safe)
-
-<!-- Acknowledgments -->
-## 7. Acknowledgements
